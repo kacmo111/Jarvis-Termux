@@ -23,7 +23,7 @@ class ChatManager:
         Initialize the ChatManager instance with API keys and settings.
         """
         self.api_key = ConfigManager.get_geminiAi_key()
-        print(f"Using API Key: {self.api_key}")
+        # print(f"Using API Key: {self.api_key}")
         self.model_id = ConfigManager.get_gemini_model_id()
         if not self.api_key:
             raise ValueError("Gemini AI API key not found in configuration.")
@@ -62,4 +62,3 @@ class ChatManager:
                 tasks = [self.genai.generate_content(prompt) for prompt in fine_tune_prompts]
                 await asyncio.gather(*tasks)
                 self.fine_tuned = True
-

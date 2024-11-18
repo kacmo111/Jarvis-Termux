@@ -18,7 +18,7 @@ class GeminiAI:
         self.api_key = api_key
         self.model_id = model_id
         self.base_url = "https://generativelanguage.googleapis.com/v1beta/models"
-    
+
     async def generate_content(self, prompt: str) -> str:
         """
         Sends a request to the Gemini AI API to generate content based on the given prompt.
@@ -30,18 +30,16 @@ class GeminiAI:
             str: The AI-generated response (just the text).
         """
         url = f"{self.base_url}/{self.model_id}:generateContent?key={self.api_key}"
-        headers = {'Content-Type': 'application/json'}
-        data = {
-            "contents": [{
-                "parts": [{"text": prompt}]
-            }]
-        }
+        headers = {"Content-Type": "application/json"}
+        data = {"contents": [{"parts": [{"text": prompt}]}]}
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, headers=headers, json=data) as response:
                 if response.status != 200:
-                    raise Exception(f"Error: {response.status}, {await response.text()}")
-                
+                    raise Exception(
+                        f"Error: {response.status}, {await response.text()}"
+                    )
+
                 response_json = await response.json()
                 return self._parse_response(response_json)
 

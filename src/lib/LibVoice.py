@@ -2,7 +2,6 @@ import os
 import asyncio
 from typing import Optional
 
-
 class LibVoice:
     @staticmethod
     async def say(msg: str) -> None:
