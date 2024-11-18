@@ -1,0 +1,21 @@
+name: Pylints
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-python:
+    name: Lint Python code
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install Pylint
+        run: pip install pylint
+      - name: Run Pylint
+        run: pylint --disable=invalid-name,trailing-whitespace,missing-final-newline,wrong-import-order,too-few-public-methods,broad-exception-caught,missing-module-docstring,unused-variable src/Jarvis.py

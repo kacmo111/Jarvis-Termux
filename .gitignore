@@ -1,6 +1,5 @@
-vendor/
-composer.lock
-dev/
-output/
-.php-cs-fixer.cache
-workflow-remover.py
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.env

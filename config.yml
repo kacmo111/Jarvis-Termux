@@ -1,1 +1,25 @@
-api-token: <i hate myself>
+# config.yml
+
+gemini_model_id: "gemini-1.5-flash-002"
+# Generation configuration for the AI model
+generation_config:
+  temperature: 1                    # Temperature parameter for text generation
+  top_p: 0.95                           # Top p parameter for text generation
+  top_k: 40                            # Top k parameter for text generation
+  max_output_tokens: 2048             # Maximum number of output tokens
+  response_mime_type: "text/plain"    # Mime type of the response
+
+# Safety settings for filtering harmful content
+safety_settings:
+  - category: "HARM_CATEGORY_HARASSMENT"            # Category of harmful content (e.g., harassment)
+    threshold: "BLOCK_NONE"                         # Threshold for blocking (e.g., none)
+  - category: "HARM_CATEGORY_HATE_SPEECH"           # Category of harmful content (e.g., hate speech)
+    threshold: "BLOCK_NONE"                         # Threshold for blocking (e.g., none)
+  - category: "HARM_CATEGORY_SEXUALLY_EXPLICIT"     # Category of harmful content (e.g., sexually explicit)
+    threshold: "BLOCK_NONE"                         # Threshold for blocking (e.g., none)
+  - category: "HARM_CATEGORY_DANGEROUS_CONTENT"     # Category of harmful content (e.g., dangerous content)
+    threshold: "BLOCK_NONE"                         # Threshold for blocking (e.g., none)
+
+fine_tune:
+  prompt:
+    - "my name is amitxd"
