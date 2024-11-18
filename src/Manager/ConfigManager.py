@@ -2,7 +2,6 @@ import os
 import yaml
 from typing import Union, Optional, Dict, Any
 
-
 class ConfigManager:
     """
     Manages configuration settings, including loading from YAML files.

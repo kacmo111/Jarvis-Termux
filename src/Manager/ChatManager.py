@@ -1,8 +1,7 @@
 from .ConfigManager import ConfigManager
-import google.generativeai as genai
+from lib.GeminiAI import GeminiAI
 from typing import Optional, Any
-import asyncio 
-
+import asyncio
 
 class ChatManager:
     """
@@ -14,9 +13,6 @@ class ChatManager:
     fine_tuned = False
 
     def __new__(cls):
-        """
-        Singleton pattern: Ensure only one instance of ChatManager exists.
-        """
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance.initialize()
@@ -31,7 +27,8 @@ class ChatManager:
         self.model_id = ConfigManager.get_gemini_model_id()
         if not self.api_key:
             raise ValueError("Gemini AI API key not found in configuration.")
-        genai.configure(api_key=self.api_key)
+
+        self.genai = GeminiAI(api_key=self.api_key, model_id=self.model_id)
 
         self.settings = ConfigManager.get_gemini_settings()
         self.chat_session = None
@@ -47,51 +44,22 @@ class ChatManager:
             str: The response text from the model.
         """
         try:
-            await self._ensure_chat_session()
             await self._apply_finetuning()
 
-            response = await self._send_message_async(prompt)
-            return response.text
+            response = await self.genai.generate_content(prompt)
+            return response
         except Exception as e:
             return f"Error while communicating with Gemini AI: {e}"
-
-    async def _ensure_chat_session(self):
-        """
-        Ensures that a chat session is initialized.
-        If not, creates a new session asynchronously.
-        """
-        if not self.chat_session:
-            model = await self._create_model_async()
-            self.chat_session = model.start_chat(history=[])
 
     async def _apply_finetuning(self):
         """
         Applies fine-tuning by sending pre-configured prompts asynchronously.
+        Runs multiple fine-tuning prompts in parallel to speed up the process.
         """
         if not self.fine_tuned:
             fine_tune_prompts = ConfigManager.get_finetune_prompt()
             if fine_tune_prompts:
-                for prompt in fine_tune_prompts:
-                    await self._send_message_async(prompt)
+                tasks = [self.genai.generate_content(prompt) for prompt in fine_tune_prompts]
+                await asyncio.gather(*tasks)
                 self.fine_tuned = True
-                # print("Fine-tuning completed successfully.")
 
-    async def _send_message_async(self, prompt: str) -> Any:
-        """
-        Simulates asynchronous behavior for sending messages.
-        """
-        return await asyncio.to_thread(self.chat_session.send_message, prompt)
-
-    async def _create_model_async(self) -> Any:
-        """
-        Creates and returns a Generative AI model asynchronously.
-        """
-        try:
-            return await asyncio.to_thread(
-                genai.GenerativeModel,
-                model_name=self.model_id,
-                safety_settings=self.settings.get("safety_settings"),
-                generation_config=self.settings.get("generation_config"),
-            )
-        except Exception as e:
-            raise ValueError(f"Error initializing Generative AI model: {e}")
