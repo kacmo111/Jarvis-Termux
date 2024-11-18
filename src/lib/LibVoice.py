@@ -69,6 +69,7 @@ class LibVoice:
                     print(f"Error from Termux STT: {stderr.decode().strip()}")
             else:
                 print("Error: Termux Speech-to-Text is not available.")
+                print("Please Install it via $ pkg install termux-api")
         except Exception as e:
             print(f"Error during voice input: {e}")
         return None
