@@ -50,7 +50,7 @@ fine_tune:
 ### Secrets File (`.env`)
 
 ```env
-GEMINIAI_KEY=AIzaSyA-RfCtpuU3iiR0ttio6S1IXNIT-gneftI
+GEMINIAI_KEY=your.api.key
 ```
 
 ## Getting Started
